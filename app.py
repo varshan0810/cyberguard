@@ -27,9 +27,11 @@ def init_session():
         session["totp_secret"] = pyotp.random_base32()
 
 def calculate_score():
-    total_extra_attempts = sum(max(0, count - 1) for count in session.get("attempts", {}).values())
-    hints = session.get("hints_used", 0)
-    score = 100 - (hints * 4) - (total_extra_attempts * 3)
+    # Start with 100 points. Deduct 5 points for every failed attempt.
+    mistakes = session.get("hints_used", 0)
+    score = 100 - (mistakes * 5)
+    
+    # Ensure the score does not drop below 0
     return max(0, score)
 
 @app.route("/")
