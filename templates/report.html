@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>🏆 Security Evaluation Report</h2>
+    <h3>Score: {{ score }} / 100</h3>
+    <h4>Status Level: <span style="color: #58a6ff;">{{ tier }}</span></h4>
+    <hr>
+    <p><strong>Cipher's Assessment:</strong></p>
+    <blockquote style="border-left: 4px solid #238636; padding-left: 10px; color: #7ee787;">
+        {{ summary }}
+    </blockquote>
+    <br>
+    <a href="{{ url_for('download_certificate') }}" class="btn">Download Official Certificate (PDF)</a>
+    <a href="{{ url_for('reset') }}" class="btn" style="background-color: #30363d;">Restart Training</a>
+</div>
+{% endblock %}

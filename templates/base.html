@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CyberGuard Trainer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>🛡️ CyberGuard — Personal Digital Security Trainer</h2>
+        
+        {% if mod_id %}
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ (mod_id / total_modules) * 100 }}%;"></div>
+        </div>
+        
+        <div class="character-box">
+            <div class="avatar">CIPHER</div>
+            <div>
+                <strong>Security Mentor:</strong>
+                <div id="cipher_dialogue" class="dialogue-text">
+                    Welcome to Module {{ mod_id }}. Adjust your security settings below and execute validation.
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

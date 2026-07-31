@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Welcome to CyberGuard</h3>
+    <p>Secure your personal digital footprint across 7 essential modules. Each module enforces strict, deterministic security rules. You must fix each vulnerability before moving forward.</p>
+    <a href="{{ url_for('show_module', mod_id=1) }}" class="btn">Begin Defense Training</a>
+</div>
+{% endblock %}

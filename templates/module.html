@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Module {{ mod_id }} of {{ total_modules }}</h3>
+
+    {% if mod_id == 1 %}
+        <h4>1. Password Strength Engine</h4>
+        <input type="password" id="password_input" placeholder="Enter new password" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <div id="entropy_display" style="font-weight: bold; margin-bottom: 10px;">Entropy: 0 bits</div>
+
+    {% elif mod_id == 2 %}
+        <h4>2. Phishing Email Identification</h4>
+        <p>Click on all suspicious elements/links in the email below:</p>
+        <div class="phishing-email">
+            <strong>From:</strong> {{ phishing.sender }}<br>
+            <strong>Subject:</strong> {{ phishing.subject }}<hr>
+            {% for part in phishing.body_parts %}
+                <span class="phishing-span" data-id="{{ part.id }}">{{ part.text }}</span>
+            {% endfor %}
+        </div>
+
+    {% elif mod_id == 3 %}
+        <h4>3. Two-Factor Authentication (2FA)</h4>
+        <p>Secret Key: <code>{{ totp_secret }}</code></p>
+        <p>Simulated Authenticator Code: <strong style="color: #58a6ff;">{{ totp_code }}</strong></p>
+        <input type="text" id="totp_input" placeholder="Enter 6-digit TOTP code">
+
+    {% elif mod_id == 4 %}
+        <h4>4. Social Media Privacy Controls</h4>
+        <label><input type="checkbox" id="priv_private"> Private Account</label><br>
+        <label><input type="checkbox" id="priv_location"> Public Location Tagging</label><br>
+        <label><input type="checkbox" id="priv_phone"> Public Phone Number</label><br>
+        <label><input type="checkbox" id="priv_dob"> Public Date of Birth</label>
+
+    {% elif mod_id == 5 %}
+        <h4>5. Public Wi-Fi Defense Strategy</h4>
+        <p>{{ wifi.prompt }}</p>
+        {% for opt in wifi.options %}
+            <label><input type="radio" name="wifi_opt" value="{{ opt.id }}"> {{ opt.text }}</label><br><br>
+        {% endfor %}
+
+    {% elif mod_id == 6 %}
+        <h4>6. PII Classification</h4>
+        {% for field in pii %}
+            <div style="margin-bottom: 8px;">
+                <span>{{ field.label }}:</span>
+                <select class="pii-select" data-id="{{ field.id }}">
+                    <option value="safe">Safe to Share</option>
+                    <option value="unsafe">Never Share Publicly</option>
+                </select>
+            </div>
+        {% endfor %}
+
+    {% elif mod_id == 7 %}
+        <h4>7. Device & App Hygiene</h4>
+        {% for item in hygiene %}
+            <label><input type="checkbox" class="hygiene-chk" data-id="{{ item.id }}"> {{ item.label }}</label><br><br>
+        {% endfor %}
+    {% endif %}
+
+    <div id="issues_div" class="issue-list"></div>
+    <br>
+    <button class="btn" onclick="submitModule({{ mod_id }})">Validate Security</button>
+    
+    {% if mod_id < total_modules %}
+        <a id="next_btn_link" href="{{ url_for('show_module', mod_id=mod_id+1) }}">
+            <button id="next_btn" class="btn" style="background-color: #1f6beb;" {% if not completed %}disabled{% endif %}>Next Module ➔</button>
+        </a>
+    {% else %}
+        <a href="{{ url_for('report') }}">
+            <button id="next_btn" class="btn" style="background-color: #1f6beb;" {% if not completed %}disabled{% endif %}>View Final Report Card ➔</button>
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
