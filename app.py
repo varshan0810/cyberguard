@@ -128,7 +128,13 @@ def report():
     score = calculate_score()
     session["score"] = score
     
-    summary_text = llm_agent.generate_report_card(session)
+    # OPTIMIZATION: Instant static text instead of a blocking LLM API call
+    if score >= 90:
+        summary_text = "Outstanding work. You demonstrated advanced security hygiene and successfully mitigated all standard attack vectors."
+    elif score >= 70:
+        summary_text = "Solid effort. You understand core security principles, though a few modules required additional guidance."
+    else:
+        summary_text = "Training complete. Your digital footprint remains vulnerable. Focus on implementing stronger passwords and strict 2FA requirements."
 
     return render_template("report.html", score=score, summary=summary_text)
 
