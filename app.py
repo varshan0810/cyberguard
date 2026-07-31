@@ -1,9 +1,7 @@
 import os
 import pyotp
-from io import BytesIO
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_file
-from fpdf import FPDF
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 from scenarios import PHISHING_SCENARIO, WIFI_SCENARIO, PII_FIELDS, HYGIENE_CHECKLIST
 import validators
@@ -12,7 +10,7 @@ import llm_agent
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback_secret_key_123")
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev")
 
 TOTAL_MODULES = 7
 
@@ -51,7 +49,6 @@ def show_module(mod_id: int):
     if mod_id < 1 or mod_id > TOTAL_MODULES:
         return redirect(url_for("landing"))
     
-    # Gatekeeper enforcement
     if mod_id > 1 and (mod_id - 1) not in session["completed_modules"]:
         return redirect(url_for("show_module", mod_id=max(1, session["current_module"])))
 
@@ -131,30 +128,9 @@ def report():
     score = calculate_score()
     session["score"] = score
     
-    tier = "Cyber Rookie"
-    if score >= 90: tier = "Cyber Sentinel"
-    elif score >= 75: tier = "Cyber Guardian"
-
     summary_text = llm_agent.generate_report_card(session)
 
-    return render_template("report.html", score=score, tier=tier, summary=summary_text)
-
-@app.route("/download-certificate")
-def download_certificate():
-    score = session.get("score", calculate_score())
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Helvetica", "B", 24)
-    pdf.cell(0, 20, "CyberGuard Security Training Certificate", ln=True, align="C")
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "", 14)
-    pdf.cell(0, 10, f"This certifies completion of the 7 Digital Security Modules.", ln=True, align="C")
-    pdf.cell(0, 10, f"Final Security Score: {score} / 100", ln=True, align="C")
-    
-    buffer = BytesIO()
-    pdf.output(buffer)
-    buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name="CyberGuard_Certificate.pdf", mimetype="application/pdf")
+    return render_template("report.html", score=score, summary=summary_text)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

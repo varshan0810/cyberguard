@@ -1,16 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
-    <h2>🏆 Security Evaluation Report</h2>
-    <h3>Score: {{ score }} / 100</h3>
-    <h4>Status Level: <span style="color: #58a6ff;">{{ tier }}</span></h4>
-    <hr>
-    <p><strong>Cipher's Assessment:</strong></p>
-    <blockquote style="border-left: 4px solid #238636; padding-left: 10px; color: #7ee787;">
+<div class="card" style="text-align: center; padding: 40px;">
+    <div style="font-size: 4rem; color: #58a6ff; margin-bottom: 30px; font-weight: bold;">
+        {{ score }} / 100
+    </div>
+    
+    <div style="color: #c9d1d9; font-size: 1.1rem; line-height: 1.6; text-align: left; max-width: 600px; margin: 0 auto;">
         {{ summary }}
-    </blockquote>
-    <br>
-    <a href="{{ url_for('download_certificate') }}" class="btn">Download Official Certificate (PDF)</a>
-    <a href="{{ url_for('reset') }}" class="btn" style="background-color: #30363d;">Restart Training</a>
+    </div>
 </div>
 {% endblock %}
